@@ -1,120 +1,120 @@
 # Attendance Management System
 
-A comprehensive Flutter-based attendance management system designed for educational institutions. This application allows different user roles to efficiently manage student attendance, subjects, and reporting.
+A comprehensive Flutter application for managing student attendance across educational institutions.
 
 ## Features
 
-### Role-Based Access Control
+- **Multi-Role Authentication**: Teacher, Department Head (CDD), and Director roles
+- **Student Management**: Add, edit, and manage student records with matricule system
+- **Subject Management**: Create and assign subjects with level and axis grouping
+- **Attendance Tracking**: Real-time attendance taking and monitoring
+- **Reports & Analytics**: Comprehensive reports and attendance statistics
+- **Teacher Assignment**: Automatic subject assignment display
 
-- **CdD (Department Head)**: Manage students, teachers, subjects, semesters, and view comprehensive reports
-- **Teacher**: Take attendance for assigned subjects and view student attendance
-- **Director**: View overall institution reports and analytics
+## Getting Started
 
-### Core Functionality
+### Prerequisites
+- Flutter SDK (v3.7.0 or higher)
+- Dart SDK
+- Android Studio / Visual Studio Code
 
-- Student management (add, edit, delete students)
-- Teacher management and assignment to subjects
-- Subject and semester management
-- Session scheduling (daily attendance records)
-- Real-time attendance tracking
-- Comprehensive reporting with charts and analytics
-- CSV export for attendance records
-- Secure authentication with password hashing
+### Installation
 
-## Technology Stack
+1. Clone the repository:
+   ```bash
+   git clone [repository-url]
+   cd appels/app
+   ```
 
-- **Framework**: Flutter (SDK ^3.7.0)
-- **Database**: SQLite (sqflite)
-- **State Management**: Provider
-- **Charts**: FL Chart
-- **Secure Storage**: Flutter Secure Storage
-- **Password Hashing**: BCrypt
-- **File Operations**: Share Plus
+2. Install dependencies:
+   ```bash
+   flutter pub get
+   ```
 
-## Installation & Setup
+3. Create app icon (optional):
+   ```bash
+   # Create assets/icons/app_icon.png (1024x1024px)
+   # with blue circle gradient and school icon design
+   flutter pub run flutter_launcher_icons
+   ```
 
-1. Ensure you have Flutter SDK installed
-2. Clone the repository
-3. Navigate to the project directory
-4. Run `flutter pub get` to install dependencies
-5. Run `flutter run` or `flutter run --debug` for development
+4. Run the application:
+   ```bash
+   flutter run --debug
+   ```
 
-### Default Accounts
+## Default Accounts
 
-The application comes with three pre-configured accounts for testing different user roles:
-
-**Teacher Account:**
-
-- **Email**: teacher@university.edu
-- **Password**: teacher123
-- **Display Name**: John Smith
-- **Access Level**: Can take attendance for assigned subjects and view student attendance
-
-**CdD (Department Head) Account:**
-
-- **Email**: cdd@university.edu
-- **Password**: cdd123
+### Department Head (CDD)
+- **Email**: `cdd@university.edu`
+- **Password**: `cdd123`
 - **Display Name**: Dr MAKA MAKA Ebenezer
-- **Access Level**: Can manage students, teachers, subjects, semesters, and view comprehensive reports
+- **Permissions**: Manage students, teachers, subjects
 
-**Director Account:**
-
-- **Email**: director@university.edu
-- **Password**: director123
+### Director
+- **Email**: `director@university.edu`
+- **Password**: `director123`
 - **Display Name**: Pr Ruben MOUANGUE
-- **Access Level**: Can view overall institution reports and analytics
+- **Permissions**: View institution-wide reports
 
-## Project Structure
+### Teacher
+- **Email**: `teacher@university.edu`
+- **Password**: `teacher123`
+- **Display Name**: John Smith
+- **Permissions**: Take attendance, view assigned subjects
 
-```dart
-lib/
-├── database/
-│   └── database_helper.dart          # SQLite database configuration
-├── models/                          # Data models
-│   ├── user.dart                    # User model (Teacher, CdD, Director)
-│   ├── student.dart                 # Student model
-│   ├── subject.dart                 # Subject model
-│   ├── semester.dart                # Semester model
-│   ├── session.dart                 # Session model
-│   ├── attendance.dart              # Attendance record model
-│   └── attendance_item.dart         # Individual attendance items
-├── providers/
-│   └── app_provider.dart            # State management
-├── screens/                         # UI Screens
-│   ├── login_screen.dart            # Authentication
-│   ├── cdd_dashboard.dart           # Department Head dashboard
-│   ├── teacher_dashboard.dart       # Teacher dashboard
-│   ├── director_dashboard.dart      # Director dashboard
-│   ├── manage_students_screen.dart  # Student management
-│   ├── manage_subjects_screen.dart  # Subject management
-│   ├── manage_teachers_screen.dart  # Teacher management
-│   ├── take_attendance_screen.dart  # Attendance recording
-│   └── reports_screen.dart          # Analytics and reports
-├── services/                        # Business logic and database operations
-└── widgets/                         # Reusable UI components
-    └── app_logo.dart                # Application logo widget
+## App Features
+
+### Student Registration
+- **Required Fields**:
+  - First Name & Last Name
+  - Matricule (format: 2xGxxxxx, e.g., 3AG00123)
+  - Level (3, 4, or 5)
+  - Axis (GLO or GRT)
+
+### Subject Creation
+- **Simplified Form**:
+  - Subject Name
+  - Level (3, 4, or 5)
+  - Axis (GLO or GRT)
+
+### Teacher Dashboard
+- **Assigned Subjects**: Shows all subjects assigned with level and axis
+- **Attendance Taking**: Take attendance for assigned classes
+- **History**: View past attendance sessions
+
+## Technical Details
+
+### Database Schema
+- **Students**: matricule, level, axis with unique constraints
+- **Subjects**: name, level, axis grouping
+- **Attendance**: Session-based tracking with automated analytics
+
+### Architecture
+- **Provider Pattern**: For state management
+- **SQLite**: Local database for offline functionality
+- **RESTful API Ready**: Expandable to web service
+
+## Building for Release
+
+### Android APK
+```bash
+flutter build apk --release
 ```
 
-## Database Schema
+### iOS (macOS only)
+```bash
+flutter build ios --release
+```
 
-The application uses SQLite with the following tables:
+## Contributing
 
-- `users` - Store user accounts (teachers, CdD, directors)
-- `semester` - Academic semesters
-- `subjects` - Course subjects
-- `students` - Student information
-- `assignments` - Teacher-subject assignments
-- `sessions` - Attendance sessions for subjects
-- `attendance` - Attendance records
-- `attendance_items` - Individual student attendance entries
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## Getting Started with Flutter
+## License
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](<https://docs.flutter.dev/get-started/codelab>)
-- [Cookbook: Useful Flutter samples](<https://docs.flutter.dev/cookbook>)
-
-For help getting started with Flutter development, view the
-[online documentation](<https://docs.flutter.dev/>), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This project is licensed under the MIT License - see the LICENSE file for details.

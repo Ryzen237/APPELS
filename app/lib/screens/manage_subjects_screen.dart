@@ -100,7 +100,7 @@ class _ManageSubjectsScreenState extends State<ManageSubjectsScreen> {
                     return Card(
                       child: ListTile(
                         title: Text(subject.name),
-                        subtitle: Text('Sessions per week: ${subject.sessionsPerWeek}'),
+                        subtitle: Text('Level ${subject.level} (${subject.axis})'),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -134,30 +134,23 @@ class AddSubjectDialog extends StatefulWidget {
 class _AddSubjectDialogState extends State<AddSubjectDialog> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _subjectAreaController = TextEditingController();
   final _levelController = TextEditingController();
-  final _axisController = TextEditingController();
-  final _sessionsController = TextEditingController();
+  String _selectedAxis = 'GLO';
 
   @override
   void initState() {
     super.initState();
     if (widget.subject != null) {
       _nameController.text = widget.subject!.name;
-      _subjectAreaController.text = widget.subject!.subjectArea;
       _levelController.text = widget.subject!.level.toString();
-      _axisController.text = widget.subject!.axis;
-      _sessionsController.text = widget.subject!.sessionsPerWeek.toString();
+      _selectedAxis = widget.subject!.axis;
     }
   }
 
   @override
   void dispose() {
     _nameController.dispose();
-    _subjectAreaController.dispose();
     _levelController.dispose();
-    _axisController.dispose();
-    _sessionsController.dispose();
     super.dispose();
   }
 
@@ -181,16 +174,6 @@ class _AddSubjectDialogState extends State<AddSubjectDialog> {
               },
             ),
             TextFormField(
-              controller: _subjectAreaController,
-              decoration: const InputDecoration(labelText: 'Subject Area'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter subject area';
-                }
-                return null;
-              },
-            ),
-            TextFormField(
               controller: _levelController,
               decoration: const InputDecoration(labelText: 'Level (3, 4, or 5)'),
               keyboardType: TextInputType.number,
@@ -206,34 +189,19 @@ class _AddSubjectDialogState extends State<AddSubjectDialog> {
               },
             ),
             DropdownButtonFormField<String>(
-              value: _axisController.text.isNotEmpty ? _axisController.text : null,
+              value: _selectedAxis,
               decoration: const InputDecoration(labelText: 'Axis'),
               items: ['GLO', 'GRT'].map((axis) {
                 return DropdownMenuItem(value: axis, child: Text(axis));
               }).toList(),
               onChanged: (value) {
                 setState(() {
-                  _axisController.text = value ?? '';
+                  _selectedAxis = value ?? 'GLO';
                 });
               },
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please select an axis';
-                }
-                return null;
-              },
-            ),
-            TextFormField(
-              controller: _sessionsController,
-              decoration: const InputDecoration(labelText: 'Sessions per Week'),
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter sessions per week';
-                }
-                final num = int.tryParse(value);
-                if (num == null || num <= 0) {
-                  return 'Please enter a valid number';
                 }
                 return null;
               },
@@ -252,10 +220,10 @@ class _AddSubjectDialogState extends State<AddSubjectDialog> {
               final subject = Subject(
                 id: widget.subject?.id,
                 name: _nameController.text,
-                subjectArea: _subjectAreaController.text,
+                subjectArea: _nameController.text, // Subject area equals subject name
                 level: int.parse(_levelController.text),
-                axis: _axisController.text,
-                sessionsPerWeek: int.parse(_sessionsController.text),
+                axis: _selectedAxis,
+                sessionsPerWeek: 2, // Default value for sessions per week
               );
               Navigator.of(context).pop(subject);
             }

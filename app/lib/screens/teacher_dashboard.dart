@@ -200,9 +200,21 @@ class _TeacherDashboardState extends State<TeacherDashboard> {
                                       fontSize: 16,
                                     ),
                                   ),
-                                  subtitle: Text(
-                                    '${subject.sessionsPerWeek} sessions per week',
-                                    style: TextStyle(color: Colors.grey.shade600),
+                                  subtitle: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Level ${subject.level} (${subject.axis})',
+                                        style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${subject.sessionsPerWeek} sessions per week',
+                                        style: TextStyle(color: Colors.grey.shade600),
+                                      ),
+                                    ],
                                   ),
                                   trailing: ElevatedButton.icon(
                                     onPressed: () => _takeAttendance(subject),

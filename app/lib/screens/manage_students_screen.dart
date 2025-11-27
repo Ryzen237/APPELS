@@ -104,8 +104,8 @@ class _ManageStudentsScreenState extends State<ManageStudentsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text('ID: ${student.id}'),
-                            Text('${student.subjectArea} - Level ${student.level} (${student.axis})'),
+                            Text('${student.matricule}'),
+                            Text('Level ${student.level} (${student.axis})'),
                           ],
                         ),
                         trailing: Row(
@@ -142,7 +142,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
   final _formKey = GlobalKey<FormState>();
   final _firstnameController = TextEditingController();
   final _lastnameController = TextEditingController();
-  final _subjectAreaController = TextEditingController();
+  final _matriculeController = TextEditingController();
   final _levelController = TextEditingController();
   String _selectedAxis = 'GLO';
 
@@ -152,7 +152,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
     if (widget.student != null) {
       _firstnameController.text = widget.student!.firstname;
       _lastnameController.text = widget.student!.lastname;
-      _subjectAreaController.text = widget.student!.subjectArea;
+      _matriculeController.text = widget.student!.matricule;
       _levelController.text = widget.student!.level.toString();
       _selectedAxis = widget.student!.axis;
     }
@@ -162,7 +162,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
   void dispose() {
     _firstnameController.dispose();
     _lastnameController.dispose();
-    _subjectAreaController.dispose();
+    _matriculeController.dispose();
     _levelController.dispose();
     super.dispose();
   }
@@ -214,11 +214,19 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                         },
                       ),
                       TextFormField(
-                        controller: _subjectAreaController,
-                        decoration: const InputDecoration(labelText: 'Subject Area'),
+                        controller: _matriculeController,
+                        decoration: const InputDecoration(
+                          labelText: 'Matricule',
+                          hintText: 'Ex: 3AG00123 (2xGxxxxx format)'
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter subject area';
+                            return 'Please enter matricule';
+                          }
+                          // Validate matricule format: 2xGxxxxx (7 characters)
+                          final matriculeRegex = RegExp(r'^\d{1}[A-Z]{2}\d{5}$');
+                          if (!matriculeRegex.hasMatch(value)) {
+                            return 'Matricule must be in format: 2xGxxxxx (e.g., 3AG00123)';
                           }
                           return null;
                         },
@@ -278,7 +286,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                           id: widget.student?.id,
                           firstname: _firstnameController.text,
                           lastname: _lastnameController.text,
-                          subjectArea: _subjectAreaController.text,
+                          matricule: _matriculeController.text,
                           level: int.parse(_levelController.text),
                           axis: _selectedAxis,
                           createdAt: widget.student?.createdAt,

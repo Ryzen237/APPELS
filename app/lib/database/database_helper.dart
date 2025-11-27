@@ -71,11 +71,11 @@ class DatabaseHelper {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         firstname TEXT NOT NULL,
         lastname TEXT NOT NULL,
-        subject_area TEXT NOT NULL,
+        matricule TEXT NOT NULL,
         level INTEGER NOT NULL CHECK(level >= 3 AND level <= 5),
         axis TEXT NOT NULL CHECK(axis IN ('GLO', 'GRT')),
         created_at TEXT,
-        UNIQUE(firstname, lastname, subject_area, level, axis)
+        UNIQUE(matricule)
       )
     ''');
 
@@ -192,11 +192,11 @@ class DatabaseHelper {
   }
 
   static Future<void> _insertSampleStudents(Database db) async {
-    // Mathematics students - Level 3, GLO
+    // Level 3, GLO students
     await db.insert('students', {
       'firstname': 'Alice',
       'lastname': 'Johnson',
-      'subject_area': 'Mathematics',
+      'matricule': '3AG00001',
       'level': 3,
       'axis': 'GLO',
       'created_at': DateTime.now().toIso8601String(),
@@ -205,27 +205,27 @@ class DatabaseHelper {
     await db.insert('students', {
       'firstname': 'Bob',
       'lastname': 'Smith',
-      'subject_area': 'Mathematics',
+      'matricule': '3AG00002',
       'level': 3,
       'axis': 'GLO',
       'created_at': DateTime.now().toIso8601String(),
     });
 
-    // Mathematics students - Level 3, GRT
+    // Level 3, GRT students
     await db.insert('students', {
       'firstname': 'Charlie',
       'lastname': 'Brown',
-      'subject_area': 'Mathematics',
+      'matricule': '3AG00003',
       'level': 3,
       'axis': 'GRT',
       'created_at': DateTime.now().toIso8601String(),
     });
 
-    // Physics students - Level 4, GLO
+    // Level 4, GLO students
     await db.insert('students', {
       'firstname': 'Diana',
       'lastname': 'Wilson',
-      'subject_area': 'Physics',
+      'matricule': '3AG00004',
       'level': 4,
       'axis': 'GLO',
       'created_at': DateTime.now().toIso8601String(),
@@ -234,17 +234,17 @@ class DatabaseHelper {
     await db.insert('students', {
       'firstname': 'Eve',
       'lastname': 'Davis',
-      'subject_area': 'Physics',
+      'matricule': '3AG00005',
       'level': 4,
       'axis': 'GLO',
       'created_at': DateTime.now().toIso8601String(),
     });
 
-    // Computer Science students - Level 5, GRT
+    // Level 5, GRT students
     await db.insert('students', {
       'firstname': 'Frank',
       'lastname': 'Miller',
-      'subject_area': 'Computer Science',
+      'matricule': '3AG00006',
       'level': 5,
       'axis': 'GRT',
       'created_at': DateTime.now().toIso8601String(),
@@ -253,7 +253,7 @@ class DatabaseHelper {
     await db.insert('students', {
       'firstname': 'Grace',
       'lastname': 'Garcia',
-      'subject_area': 'Computer Science',
+      'matricule': '3AG00007',
       'level': 5,
       'axis': 'GRT',
       'created_at': DateTime.now().toIso8601String(),
