@@ -37,6 +37,13 @@ class UserService {
     return await db.insert('users', hashedUser.toMap());
   }
 
+  // Get all users
+  Future<List<User>> getAllUsers() async {
+    final db = await _dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query('users');
+    return List.generate(maps.length, (i) => User.fromMap(maps[i]));
+  }
+
   // Get all users by role
   Future<List<User>> getUsersByRole(String role) async {
     final db = await _dbHelper.database;

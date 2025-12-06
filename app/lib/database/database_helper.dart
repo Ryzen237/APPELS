@@ -196,7 +196,7 @@ class DatabaseHelper {
     await db.insert('students', {
       'firstname': 'Alice',
       'lastname': 'Johnson',
-      'matricule': '3AG00001',
+      'matricule': '21G00001',
       'level': 3,
       'axis': 'GLO',
       'created_at': DateTime.now().toIso8601String(),
@@ -205,7 +205,7 @@ class DatabaseHelper {
     await db.insert('students', {
       'firstname': 'Bob',
       'lastname': 'Smith',
-      'matricule': '3AG00002',
+      'matricule': '21G00002',
       'level': 3,
       'axis': 'GLO',
       'created_at': DateTime.now().toIso8601String(),
@@ -215,7 +215,7 @@ class DatabaseHelper {
     await db.insert('students', {
       'firstname': 'Charlie',
       'lastname': 'Brown',
-      'matricule': '3AG00003',
+      'matricule': '22G00003',
       'level': 3,
       'axis': 'GRT',
       'created_at': DateTime.now().toIso8601String(),
@@ -225,7 +225,7 @@ class DatabaseHelper {
     await db.insert('students', {
       'firstname': 'Diana',
       'lastname': 'Wilson',
-      'matricule': '3AG00004',
+      'matricule': '22G00004',
       'level': 4,
       'axis': 'GLO',
       'created_at': DateTime.now().toIso8601String(),
@@ -234,7 +234,7 @@ class DatabaseHelper {
     await db.insert('students', {
       'firstname': 'Eve',
       'lastname': 'Davis',
-      'matricule': '3AG00005',
+      'matricule': '23G00005',
       'level': 4,
       'axis': 'GLO',
       'created_at': DateTime.now().toIso8601String(),
@@ -244,7 +244,7 @@ class DatabaseHelper {
     await db.insert('students', {
       'firstname': 'Frank',
       'lastname': 'Miller',
-      'matricule': '3AG00006',
+      'matricule': '23G00006',
       'level': 5,
       'axis': 'GRT',
       'created_at': DateTime.now().toIso8601String(),
@@ -253,7 +253,7 @@ class DatabaseHelper {
     await db.insert('students', {
       'firstname': 'Grace',
       'lastname': 'Garcia',
-      'matricule': '3AG00007',
+      'matricule': '24G00007',
       'level': 5,
       'axis': 'GRT',
       'created_at': DateTime.now().toIso8601String(),

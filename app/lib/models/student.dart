@@ -2,7 +2,7 @@ class Student {
   int? id;
   String firstname;
   String lastname;
-  String matricule; // Format: 2xGxxxxx (e.g., 3AG00123)
+  String matricule; // Format: 2xGxxxxx where 2x=admission year (e.g., 21G12345 for 2021 admission)
   int level; // 3, 4, or 5
   String axis; // 'GLO' or 'GRT'
   String? createdAt;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/services.dart';
 import '../models/models.dart';
+import '../widgets/csv_import_dialog.dart';
 
 class ManageTeachersScreen extends StatefulWidget {
   const ManageTeachersScreen({super.key});
@@ -60,16 +61,17 @@ class _ManageTeachersScreenState extends State<ManageTeachersScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Teacher'),
-        content: const Text('Are you sure you want to delete this teacher?'),
+        title: const Text('Supprimer l\'Enseignant'),
+        content: const Text('Êtes-vous sûr de vouloir supprimer cet enseignant ?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: const Text('Annuler'),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Delete'),
+            child: const Text('Supprimer'),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
           ),
         ],
       ),
@@ -97,14 +99,31 @@ class _ManageTeachersScreenState extends State<ManageTeachersScreen> {
     }
   }
 
+  void _importTeachers() {
+    showDialog(
+      context: context,
+      builder: (context) => const ImportDialog(type: 'teachers'),
+    ).then((result) {
+      if (result != null) {
+        _loadData(); // Recharger la liste après import
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Manage Teachers'),
+        title: const Text('Gestion des Enseignants'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.upload_file),
+            tooltip: 'Importer depuis CSV',
+            onPressed: _importTeachers,
+          ),
+          IconButton(
             icon: const Icon(Icons.add),
+            tooltip: 'Ajouter un enseignant',
             onPressed: _addTeacher,
           ),
         ],
@@ -112,12 +131,13 @@ class _ManageTeachersScreenState extends State<ManageTeachersScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _teachers.isEmpty
-              ? const Center(child: Text('No teachers found'))
+              ? const Center(child: Text('Aucun enseignant trouvé'))
               : ListView.builder(
                   itemCount: _teachers.length,
                   itemBuilder: (context, index) {
                     final teacher = _teachers[index];
                     return Card(
+                      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       child: ListTile(
                         title: Text(teacher.displayName ?? teacher.email),
                         subtitle: Text(teacher.email),
@@ -127,14 +147,17 @@ class _ManageTeachersScreenState extends State<ManageTeachersScreen> {
                             IconButton(
                               icon: const Icon(Icons.book),
                               onPressed: () => _assignSubjects(teacher),
-                              tooltip: 'Assign Subjects',
+                              tooltip: 'Assigner des matières',
                             ),
                             IconButton(
                               icon: const Icon(Icons.edit),
+                              tooltip: 'Modifier',
                               onPressed: () => _editTeacher(teacher),
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete),
+                              tooltip: 'Supprimer',
+                              color: Colors.red,
                               onPressed: () => _deleteTeacher(teacher.id!),
                             ),
                           ],
@@ -182,7 +205,7 @@ class _AddTeacherDialogState extends State<AddTeacherDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.teacher == null ? 'Add Teacher' : 'Edit Teacher'),
+      title: Text(widget.teacher == null ? 'Ajouter un Enseignant' : 'Modifier un Enseignant'),
       content: Form(
         key: _formKey,
         child: Column(
@@ -194,7 +217,7 @@ class _AddTeacherDialogState extends State<AddTeacherDialog> {
               keyboardType: TextInputType.emailAddress,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter email';
+                  return 'Veuillez saisir l\'email';
                 }
                 return null;
               },
@@ -202,18 +225,18 @@ class _AddTeacherDialogState extends State<AddTeacherDialog> {
             if (widget.teacher == null)
               TextFormField(
                 controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Password'),
+                decoration: const InputDecoration(labelText: 'Mot de passe'),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter password';
+                    return 'Veuillez saisir le mot de passe';
                   }
                   return null;
                 },
               ),
             TextFormField(
               controller: _displayNameController,
-              decoration: const InputDecoration(labelText: 'Display Name'),
+              decoration: const InputDecoration(labelText: 'Nom affiché'),
             ),
           ],
         ),
@@ -221,7 +244,7 @@ class _AddTeacherDialogState extends State<AddTeacherDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: const Text('Annuler'),
         ),
         TextButton(
           onPressed: () {
@@ -237,7 +260,7 @@ class _AddTeacherDialogState extends State<AddTeacherDialog> {
               Navigator.of(context).pop(teacher);
             }
           },
-          child: const Text('Save'),
+          child: const Text('Enregistrer'),
         ),
       ],
     );
@@ -284,7 +307,7 @@ class _AssignSubjectsDialogState extends State<AssignSubjectsDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Assign Subjects to ${widget.teacher.displayName ?? widget.teacher.email}'),
+      title: Text('Assigner des Matières à ${widget.teacher.displayName ?? widget.teacher.email}'),
       content: _isLoading
           ? const SizedBox(height: 100, child: Center(child: CircularProgressIndicator()))
           : SizedBox(
@@ -318,7 +341,7 @@ class _AssignSubjectsDialogState extends State<AssignSubjectsDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Close'),
+          child: const Text('Fermer'),
         ),
       ],
     );

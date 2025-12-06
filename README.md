@@ -10,7 +10,7 @@ Role-Based Access Control
 
 Core Functionality
 
-    Student management (add, edit, delete students)
+    Student management (add, edit, delete students) with year-based matricule format (2xGxxxxx where 2x=admission year)
     Teacher management and assignment to subjects
     Subject and semester management
     Session scheduling (daily attendance records)

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/services.dart';
 import '../models/models.dart';
+import '../widgets/csv_import_dialog.dart';
 
 class ManageStudentsScreen extends StatefulWidget {
   const ManageStudentsScreen({super.key});
@@ -56,16 +57,17 @@ class _ManageStudentsScreenState extends State<ManageStudentsScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Student'),
-        content: const Text('Are you sure you want to delete this student?'),
+        title: const Text('Supprimer l\'Étudiant'),
+        content: const Text('Êtes-vous sûr de vouloir supprimer cet étudiant ?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: const Text('Annuler'),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Delete'),
+            child: const Text('Supprimer'),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
           ),
         ],
       ),
@@ -77,14 +79,31 @@ class _ManageStudentsScreenState extends State<ManageStudentsScreen> {
     }
   }
 
+  void _importStudents() {
+    showDialog(
+      context: context,
+      builder: (context) => const ImportDialog(type: 'students'),
+    ).then((result) {
+      if (result != null) {
+        _loadStudents(); // Recharger la liste après import
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Manage Students'),
+        title: const Text('Gestion des Étudiants'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.upload_file),
+            tooltip: 'Importer depuis CSV',
+            onPressed: _importStudents,
+          ),
+          IconButton(
             icon: const Icon(Icons.add),
+            tooltip: 'Ajouter un étudiant',
             onPressed: _addStudent,
           ),
         ],
@@ -92,20 +111,21 @@ class _ManageStudentsScreenState extends State<ManageStudentsScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _students.isEmpty
-              ? const Center(child: Text('No students found'))
+              ? const Center(child: Text('Aucun étudiant trouvé'))
               : ListView.builder(
                   itemCount: _students.length,
                   itemBuilder: (context, index) {
                     final student = _students[index];
                     return Card(
+                      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       child: ListTile(
                         title: Text(student.fullName),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text('${student.matricule}'),
-                            Text('Level ${student.level} (${student.axis})'),
+                            Text('Matricule: ${student.matricule}'),
+                            Text('Niveau ${student.level} (${student.axis})'),
                           ],
                         ),
                         trailing: Row(
@@ -113,10 +133,13 @@ class _ManageStudentsScreenState extends State<ManageStudentsScreen> {
                           children: [
                             IconButton(
                               icon: const Icon(Icons.edit),
+                              tooltip: 'Modifier',
                               onPressed: () => _editStudent(student),
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete),
+                              tooltip: 'Supprimer',
+                              color: Colors.red,
                               onPressed: () => _deleteStudent(student.id!),
                             ),
                           ],
@@ -181,7 +204,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: Text(
-                widget.student == null ? 'Add Student' : 'Edit Student',
+                widget.student == null ? 'Ajouter un Étudiant' : 'Modifier un Étudiant',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
@@ -195,20 +218,20 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                     children: [
                       TextFormField(
                         controller: _firstnameController,
-                        decoration: const InputDecoration(labelText: 'First Name'),
+                        decoration: const InputDecoration(labelText: 'Prénom'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter first name';
+                            return 'Veuillez saisir le prénom';
                           }
                           return null;
                         },
                       ),
                       TextFormField(
                         controller: _lastnameController,
-                        decoration: const InputDecoration(labelText: 'Last Name'),
+                        decoration: const InputDecoration(labelText: 'Nom'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter last name';
+                            return 'Veuillez saisir le nom';
                           }
                           return null;
                         },
@@ -217,38 +240,38 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                         controller: _matriculeController,
                         decoration: const InputDecoration(
                           labelText: 'Matricule',
-                          hintText: 'Ex: 3AG00123 (2xGxxxxx format)'
+                          hintText: 'Ex: 21G12345 (format 2xGxxxxx où 2x=année d\'admission)'
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter matricule';
+                            return 'Veuillez saisir le matricule';
                           }
-                          // Validate matricule format: 2xGxxxxx (7 characters)
-                          final matriculeRegex = RegExp(r'^\d{1}[A-Z]{2}\d{5}$');
+                          // Validate matricule format: 2xGxxxxx (2 digits + G + 5 digits)
+                          final matriculeRegex = RegExp(r'^\d{2}G\d{5}$');
                           if (!matriculeRegex.hasMatch(value)) {
-                            return 'Matricule must be in format: 2xGxxxxx (e.g., 3AG00123)';
+                            return 'Le matricule doit être au format: 2xGxxxxx (ex: 21G12345 où 21=2021 année d\'admission)';
                           }
                           return null;
                         },
                       ),
                       TextFormField(
                         controller: _levelController,
-                        decoration: const InputDecoration(labelText: 'Level (3, 4, or 5)'),
+                        decoration: const InputDecoration(labelText: 'Niveau (3, 4 ou 5)'),
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter level';
+                            return 'Veuillez saisir le niveau';
                           }
                           final level = int.tryParse(value);
                           if (level == null || level < 3 || level > 5) {
-                            return 'Level must be 3, 4, or 5';
+                            return 'Le niveau doit être 3, 4 ou 5';
                           }
                           return null;
                         },
                       ),
                       DropdownButtonFormField<String>(
                         value: _selectedAxis,
-                        decoration: const InputDecoration(labelText: 'Axis'),
+                        decoration: const InputDecoration(labelText: 'Filière'),
                         items: ['GLO', 'GRT'].map((axis) {
                           return DropdownMenuItem(value: axis, child: Text(axis));
                         }).toList(),
@@ -259,7 +282,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please select an axis';
+                            return 'Veuillez sélectionner une filière';
                           }
                           return null;
                         },
@@ -276,7 +299,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Cancel'),
+                    child: const Text('Annuler'),
                   ),
                   const SizedBox(width: 16),
                   FilledButton(
@@ -294,7 +317,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                         Navigator.of(context).pop(student);
                       }
                     },
-                    child: const Text('Save'),
+                    child: const Text('Enregistrer'),
                   ),
                 ],
               ),

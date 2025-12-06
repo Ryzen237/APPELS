@@ -68,7 +68,7 @@ A comprehensive Flutter application for managing student attendance across educa
 ### Student Registration
 - **Required Fields**:
   - First Name & Last Name
-  - Matricule (format: 2xGxxxxx, e.g., 3AG00123)
+  - Matricule (format: 2xGxxxxx where 2x=admission year, e.g., 21G12345 for 2021 admission)
   - Level (3, 4, or 5)
   - Axis (GLO or GRT)
 
